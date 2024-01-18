@@ -1,6 +1,13 @@
 import logo from './images/logo-espaco-mulher.png';
 
 const App = () => {
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log('submetido')
+  }
+
+
   return (
     <>
       <header
@@ -11,7 +18,7 @@ const App = () => {
       <main>
         <section className='bg-blue-900 flex items-center justify-center py-2'>
           <p className='text-white pr-2'>o que você precisa guardar?</p>
-          <form>
+          <form onSubmit={handleSubmit}>
             <input className='input '
               type="number"
               name="quantity"
@@ -23,15 +30,18 @@ const App = () => {
             </button>
           </form>
         </section>
-        <section className=''>
-          <article className='flex-1'>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis cumque culpa recusandae fugit at impedit suscipit cupiditate minima neque! Consectetur amet asperiores temporibus omnis eos nemo quaerat dolorum impedit voluptates?
-          </article>
-        </section>
       </main>
-      <footer>
-        <p>Você tem 3 itens na lista </p>
-      </footer>
+      <div className='flex flex-col h-[694px]'>
+        <div className='flex-1 bg-orange-200'>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis cumque culpa recusandae fugit at impedit suscipit cupiditate minima neque! Consectetur amet asperiores temporibus omnis eos nemo quaerat dolorum impedit voluptates?
+          </p>
+        </div>
+
+        <footer className='h-36 bg-blue-900 m-0'>
+          <p>Você tem 3 itens na lista </p>
+        </footer>
+      </div>
     </>
   )
 }
