@@ -1,10 +1,19 @@
+import { useState } from 'react';
 import logo from './images/logo-espaco-mulher.png';
 
 const App = () => {
+  const [items, setItems] = useState([])
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log('submetido')
+
+    const { quantity, text } = e.target.elements
+
+    //TODO: não to sabendo adicionar no array
+    setItems(() => ([{ q: quantity, t: text }]))
+
+    console.log('submetido', quantity.value, text.value)
+    console.log('items= ', items)
   }
 
 
@@ -32,11 +41,16 @@ const App = () => {
         </section>
       </main>
       <div className='flex flex-col h-[694px]'>
-        <div className='flex-1 bg-orange-200'>
-          <p>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis cumque culpa recusandae fugit at impedit suscipit cupiditate minima neque! Consectetur amet asperiores temporibus omnis eos nemo quaerat dolorum impedit voluptates?
-          </p>
-        </div>
+        <ul className='flex-1 bg-orange-200'>
+          {items.map(({ q, t }, i) => {
+            return (
+              <li
+                key={i}
+              >
+                {q.value} - {t.value}
+              </li>)
+          })}
+        </ul>
 
         <footer className='h-36 bg-blue-900 m-0'>
           <p>Você tem 3 itens na lista </p>
