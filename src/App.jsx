@@ -2,20 +2,17 @@ import { useState } from 'react';
 import logo from './images/logo-espaco-mulher.png';
 
 const App = () => {
-  const [items, setItems] = useState([])
+  const [items, setItems] = useState([{ q: null, t: null }])
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
     const { quantity, text } = e.target.elements
 
-    //TODO: não to sabendo adicionar no array
-    setItems(() => ([{ q: quantity, t: text }]))
-
-    console.log('submetido', quantity.value, text.value)
-    console.log('items= ', items)
+    setItems((e) => [...e, { q: quantity.value, t: text.value }])
   }
 
+  const itemsLength = items.length - 1
+  console.log(itemsLength)
 
   return (
     <>
@@ -40,18 +37,27 @@ const App = () => {
           </form>
         </section>
       </main>
-      <div className='flex flex-col h-[694px]'>
-        <ul className='flex-1 bg-orange-200'>
-          {items.map(({ q, t }, i) => {
-            return (
-              <li
-                key={i}
-              >
-                {q.value} - {t.value}
-              </li>)
-          })}
-        </ul>
-
+      <div className='flex flex-col h-[694px] justify-around'>
+        <section className='flex-1 bg-orange-200'>
+          <ul className='flex gap-5 flex-wrap justify-around'>
+            {items.map(({ q, t }, i) => {
+              return (
+                itemsLength ? <li
+                  className='min-w-6 px-3'
+                  key={i}
+                >
+                  <input type="checkbox" name="item" className='mx-2' />
+                  {q} {t}
+                  <button
+                    className='text-red-600 font-semibold m-1 outline-1 px-1'>
+                    x
+                  </button>
+                </li>
+                  : ''
+              )
+            })}
+          </ul>
+        </section>
         <footer className='h-36 bg-blue-900 m-0'>
           <p>Você tem 3 itens na lista </p>
         </footer>
