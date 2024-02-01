@@ -82,9 +82,7 @@ const App = () => {
                 <span className={item.stored ? 'line-through' : ''}>
                   {item.quantity} {item.name}
                 </span>
-                <button
-                  onClick={() => handleClickDelete(item.id)}
-                >
+                <button onClick={() => handleClickDelete(item.id)} >
                   ❌
                 </button>
               </li>
