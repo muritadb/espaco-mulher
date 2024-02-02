@@ -34,7 +34,14 @@ const App = () => {
 
   // const itemsLength = items.length - 1
   // console.log(itemsLength)
-
+  let totalStored = items.reduce((acc, item) => {
+    if (item.stored) {
+      acc++
+    }
+    return acc
+  }, 0)
+  let percentItems = totalStored / items.length * 100
+  console.log(totalStored)
   return (
     <>
       <header
@@ -90,8 +97,17 @@ const App = () => {
             }
           </ul>
         </section>
-        <footer className='h-36 bg-blue-900 m-0'>
-          <p>Você tem 3 itens na lista </p>
+        <footer className='h-36 bg-blue-900 m-0 py-4'>
+          <h3 className='text-center text-white'>
+            {items.length === 0 ?
+              <p>
+                Você tem 0 items na lista
+              </p>
+              : <p>
+                Você tem {items.length} itens na lista e ja guardou {totalStored} ({percentItems.toFixed(2)}%)
+              </p>
+            }
+          </h3>
         </footer>
       </div>
     </>
