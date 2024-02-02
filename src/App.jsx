@@ -97,8 +97,8 @@ const App = () => {
             }
           </ul>
         </section>
-        <footer className='h-36 bg-blue-900 m-0 py-4'>
-          <h3 className='text-center text-white'>
+        <footer className=' bg-blue-900 text-center m-0 py-4'>
+          <h3 className=' text-white pb-3'>
             {items.length === 0 ?
               <p>
                 Você tem 0 items na lista
@@ -108,6 +108,12 @@ const App = () => {
               </p>
             }
           </h3>
+          <select name="order-select" id="" className='input'>
+            <option value="alfabeto">Alfabeto</option>
+            <option value="recente">Recentes</option>
+            <option value="guardado">Guardados</option>
+          </select>
+          <button className='text-white bg-orange-600 p-1 rounded '>Limpar lista</button>
         </footer>
       </div>
     </>
