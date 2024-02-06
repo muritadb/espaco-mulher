@@ -104,7 +104,7 @@ const App = () => {
                 Você tem 0 items na lista
               </p>
               : <p>
-                Você tem {items.length} itens na lista e ja guardou {totalStored} ({percentItems.toFixed(2)}%)
+                Você tem {items.length} itens na lista e ja guardou {totalStored} ({percentItems.toFixed(0)}%)
               </p>
             }
           </h3>
