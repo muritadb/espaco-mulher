@@ -3,6 +3,26 @@ import logo from './images/logo-espaco-mulher.png';
 
 const ids = Array.from({ length: 20 }, () => crypto.randomUUID())
 
+const FormAddItem = ({ onHandleSubmit }) => (
+  <form onSubmit={onHandleSubmit}>
+    <select name="quantity" className='input'>
+      {ids.map((id, index) => (
+        <option key={id} value={index + 1}>
+          {index + 1}
+        </option>
+      ))}
+    </select>
+    <input
+      placeholder='Adicione itens'
+      className='input'
+      type="text"
+      name="text"
+    />
+    <button className='bg-pink-500 text-white p-1 px-3 rounded'>
+      Adicionar
+    </button>
+  </form>)
+
 const App = () => {
   const [items, setItems] = useState([])
   const [orderBy, setOrderBy] = useState('newest')
@@ -58,23 +78,8 @@ const App = () => {
       <main>
         <section className='bg-blue-900 flex items-center justify-center py-2'>
           <p className='text-white pr-2'>o que você precisa guardar?</p>
-          <form onSubmit={handleSubmit}>
-            <select name="quantity" className='input'>
-              {ids.map((id, index) => (
-                <option key={id} value={index + 1}>
-                  {index + 1}
-                </option>
-              ))}
-            </select>
-            <input
-              className='input'
-              type="text"
-              name="text"
-            />
-            <button className='bg-pink-500 text-white p-1 px-3 rounded'>
-              Adicionar
-            </button>
-          </form>
+          <FormAddItem onHandleSubmit={handleSubmit} />
+
         </section>
       </main>
       <div className='flex flex-col h-[694px] justify-around'>
