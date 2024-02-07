@@ -5,6 +5,7 @@ const ids = Array.from({ length: 20 }, () => crypto.randomUUID())
 
 const App = () => {
   const [items, setItems] = useState([])
+  const [orderBy, setOrderBy] = useState('newest')
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -21,6 +22,10 @@ const App = () => {
       }
     ])
   }
+
+  const handleChangeOrder = (e) => setOrderBy(e.target.value)
+
+  const sortedItems = orderBy === "stored" ? items.filter(item => item.stored) : items
 
   const handleClickDelete = (id) =>
     setItems((prev) => prev.filter((item) => item.id != id))
@@ -40,6 +45,7 @@ const App = () => {
     }
     return acc
   }, 0)
+
   let percentItems = totalStored / items.length * 100
   console.log(totalStored)
   return (
@@ -72,11 +78,11 @@ const App = () => {
         </section>
       </main>
       <div className='flex flex-col h-[694px] justify-around'>
-        <section className='flex-1 bg-orange-200'>
-          <ul className='flex gap-5 flex-wrap justify-around'>
-            {items.map((item) => (
+        <section className='flex flex-1 bg-orange-200 justify-center'>
+          <ul className='flex gap-5 flex-wrap justify-around w-[720px]'>
+            {sortedItems.map((item) => (
               <li
-                className='min-w-6 px-3'
+                className='min-w-6 px-3 justify-start '
                 key={item.id}
               >
                 <input
@@ -108,10 +114,10 @@ const App = () => {
               </p>
             }
           </h3>
-          <select name="order-select" id="" className='input'>
+          <select name="order-select" className='input' value={orderBy} onChange={handleChangeOrder}>
             <option value="alfabeto">Alfabeto</option>
-            <option value="recente">Recentes</option>
-            <option value="guardado">Guardados</option>
+            <option value="newest">ordenar por mais Recentes</option>
+            <option value="stored">Mostrar guardados</option>
           </select>
           <button className='text-white bg-orange-600 p-1 rounded '>Limpar lista</button>
         </footer>
