@@ -51,9 +51,9 @@ const ListOfItems = ({ sortedItems, onClickCheck, onClickDelete }) => (
 
 const Filters = ({ orderBy, onChangeOrder }) => (
   <select name="order-select" className='input' value={orderBy} onChange={onChangeOrder}>
-    <option value="alfabeto">Alfabeto</option>
     <option value="newest">ordenar por mais Recentes</option>
     <option value="stored">Mostrar guardados</option>
+    <option value="alphabetically">Ordem alfabetica</option>
   </select>
 )
 
@@ -79,7 +79,11 @@ const App = () => {
 
   const handleChangeOrder = (e) => setOrderBy(e.target.value)
 
-  const sortedItems = orderBy === "stored" ? items.filter(item => item.stored) : items
+  const sortedItems = orderBy === "stored"
+    ? items.filter((item) => item.stored)
+    : orderBy === "alphabetically"
+      ? items.toSorted((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
+      : items
 
   const handleClickDelete = (id) =>
     setItems((prev) => prev.filter((item) => item.id != id))
@@ -112,9 +116,7 @@ const App = () => {
       <main>
         <section className='bg-blue-900 flex items-center justify-center py-2'>
           <p className='text-white pr-2'>o que você precisa guardar?</p>
-
           <FormAddItem onHandleSubmit={handleSubmit} />
-
         </section>
       </main>
       <div className='flex flex-col h-[694px] justify-around'>
@@ -124,10 +126,7 @@ const App = () => {
             onClickCheck={handleClickCheck}
             onClickDelete={handleClickDelete}
           />
-
         </section>
-
-
         <footer className=' bg-blue-900 text-center m-0 py-4'>
           <h3 className=' text-white pb-3'>
             {items.length === 0 ?
