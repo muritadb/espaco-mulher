@@ -23,32 +23,39 @@ const FormAddItem = ({ onHandleSubmit }) => (
     </button>
   </form>)
 
-const ListOfItems = ({ sortedItems, onClickCheck, onClickDelete }) => (
-  <ul className='flex gap-5 flex-wrap justify-around w-[720px]'>
-    {sortedItems.map((item) => (
-      <li
-        className='min-w-6 px-3 justify-start '
-        key={item.id}
-      >
-        <input
-          type="checkbox"
-          checked={item.stored}
-          onChange={() => onClickCheck(item.id)}
-          name="item"
-          className='mx-2'
-        />
-        <span className={item.stored ? 'line-through' : ''}>
-          {item.quantity} {item.name}
-        </span>
-        <button onClick={() => onClickDelete(item.id)} >
-          ❌
-        </button>
-      </li>
-    ))
-    }
-  </ul>
-)
+const ListOfItems = ({ orderBy, items, onClickCheck, onClickDelete }) => {
+  const sortedItems = orderBy === "stored"
+    ? items.filter((item) => item.stored)
+    : orderBy === "alphabetically"
+      ? items.toSorted((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
+      : items
 
+  return (
+    <ul className='flex gap-5 flex-wrap justify-around w-[720px]'>
+      {sortedItems.map((item) => (
+        <li
+          className='min-w-6 px-3 justify-start '
+          key={item.id}
+        >
+          <input
+            type="checkbox"
+            checked={item.stored}
+            onChange={() => onClickCheck(item.id)}
+            name="item"
+            className='mx-2'
+          />
+          <span className={item.stored ? 'line-through' : ''}>
+            {item.quantity} {item.name}
+          </span>
+          <button onClick={() => onClickDelete(item.id)} >
+            ❌
+          </button>
+        </li>
+      ))
+      }
+    </ul>
+  )
+}
 const Filters = ({ orderBy, onChangeOrder }) => (
   <select name="order-select" className='input' value={orderBy} onChange={onChangeOrder}>
     <option value="newest">ordenar por mais Recentes</option>
@@ -95,12 +102,6 @@ const App = () => {
 
   const handleChangeOrder = (e) => setOrderBy(e.target.value)
 
-  const sortedItems = orderBy === "stored"
-    ? items.filter((item) => item.stored)
-    : orderBy === "alphabetically"
-      ? items.toSorted((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
-      : items
-
   const handleClickDelete = (id) =>
     setItems((prev) => prev.filter((item) => item.id != id))
 
@@ -110,7 +111,6 @@ const App = () => {
         item.id === id ? { ...item, stored: !item.stored } : item,
       ),
     )
-
 
   return (
     <>
@@ -128,7 +128,8 @@ const App = () => {
       <div className='flex flex-col h-[694px] justify-around'>
         <section className='flex flex-1 bg-orange-200 justify-center'>
           <ListOfItems
-            sortedItems={sortedItems}
+            orderBy={orderBy}
+            items={items}
             onClickCheck={handleClickCheck}
             onClickDelete={handleClickDelete}
           />
