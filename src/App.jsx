@@ -56,6 +56,7 @@ const ListOfItems = ({ orderBy, items, onClickCheck, onClickDelete }) => {
     </ul>
   )
 }
+
 const Filters = ({ orderBy, onChangeOrder }) => (
   <select name="order-select" className='input' value={orderBy} onChange={onChangeOrder}>
     <option value="newest">ordenar por mais Recentes</option>
@@ -100,6 +101,7 @@ const App = () => {
     ])
   }
 
+  const handleClickClearBtn = () => setItems([])
   const handleChangeOrder = (e) => setOrderBy(e.target.value)
 
   const handleClickDelete = (id) =>
@@ -140,7 +142,11 @@ const App = () => {
             onChangeOrder={handleChangeOrder}
           />
           <Stats items={items} />
-          <button className='text-white bg-orange-600 p-1 rounded '>Limpar lista</button>
+          <button
+            onClick={handleClickClearBtn}
+            className='text-white bg-orange-600 p-1 rounded '
+          >Limpar lista
+          </button>
         </footer>
       </div>
     </>
