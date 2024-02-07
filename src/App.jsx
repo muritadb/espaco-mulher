@@ -49,6 +49,14 @@ const ListOfItems = ({ sortedItems, onClickCheck, onClickDelete }) => (
   </ul>
 )
 
+const Filters = ({ orderBy, onChangeOrder }) => (
+  <select name="order-select" className='input' value={orderBy} onChange={onChangeOrder}>
+    <option value="alfabeto">Alfabeto</option>
+    <option value="newest">ordenar por mais Recentes</option>
+    <option value="stored">Mostrar guardados</option>
+  </select>
+)
+
 const App = () => {
   const [items, setItems] = useState([])
   const [orderBy, setOrderBy] = useState('newest')
@@ -118,6 +126,8 @@ const App = () => {
           />
 
         </section>
+
+
         <footer className=' bg-blue-900 text-center m-0 py-4'>
           <h3 className=' text-white pb-3'>
             {items.length === 0 ?
@@ -129,11 +139,10 @@ const App = () => {
               </p>
             }
           </h3>
-          <select name="order-select" className='input' value={orderBy} onChange={handleChangeOrder}>
-            <option value="alfabeto">Alfabeto</option>
-            <option value="newest">ordenar por mais Recentes</option>
-            <option value="stored">Mostrar guardados</option>
-          </select>
+          <Filters
+            orderBy={orderBy}
+            onChangeOrder={handleChangeOrder}
+          />
           <button className='text-white bg-orange-600 p-1 rounded '>Limpar lista</button>
         </footer>
       </div>
