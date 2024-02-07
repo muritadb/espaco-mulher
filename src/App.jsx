@@ -3,8 +3,87 @@ import logo from './images/logo-espaco-mulher.png';
 
 const ids = Array.from({ length: 20 }, () => crypto.randomUUID())
 
+const FormAddItem = ({ onHandleSubmit }) => (
+  <form onSubmit={onHandleSubmit}>
+    <select name="quantity" className='input'>
+      {ids.map((id, index) => (
+        <option key={id} value={index + 1}>
+          {index + 1}
+        </option>
+      ))}
+    </select>
+    <input
+      placeholder='Adicione itens'
+      className='input'
+      type="text"
+      name="text"
+    />
+    <button className='bg-pink-500 text-white p-1 px-3 rounded'>
+      Adicionar
+    </button>
+  </form>)
+
+const ListOfItems = ({ orderBy, items, onClickCheck, onClickDelete }) => {
+  const sortedItems = orderBy === "stored"
+    ? items.filter((item) => item.stored)
+    : orderBy === "alphabetically"
+      ? items.toSorted((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
+      : items
+
+  return (
+    <ul className='flex gap-5 flex-wrap justify-around w-[720px]'>
+      {sortedItems.map((item) => (
+        <li
+          className='min-w-6 px-3 justify-start '
+          key={item.id}
+        >
+          <input
+            type="checkbox"
+            checked={item.stored}
+            onChange={() => onClickCheck(item.id)}
+            name="item"
+            className='mx-2'
+          />
+          <span className={item.stored ? 'line-through' : ''}>
+            {item.quantity} {item.name}
+          </span>
+          <button onClick={() => onClickDelete(item.id)} >
+            ❌
+          </button>
+        </li>
+      ))
+      }
+    </ul>
+  )
+}
+
+const Filters = ({ orderBy, onChangeOrder }) => (
+  <select name="order-select" className='input' value={orderBy} onChange={onChangeOrder}>
+    <option value="newest">ordenar por mais Recentes</option>
+    <option value="stored">Mostrar guardados</option>
+    <option value="alphabetically">Ordem alfabetica</option>
+  </select>
+)
+
+const Stats = ({ items }) => {
+  let storedItems = items.reduce((acc, item) => item.stored ? acc + 1 : acc, 0)
+  let storedPercentage = items.length === 0 ? 0 : ((storedItems / items.length) * 100).toFixed(0)
+  const singularPlural = items.length === 1 ? "item" : "itens"
+
+  return (
+    <h3 className=' text-white pb-3'>
+      {<p>
+        {`Você tem ${items.length} ${singularPlural} na lista`}
+        {items.length > 0 && <span> e ja guardou {storedItems} ({storedPercentage}%)</span>}
+      </p>
+      }
+    </h3>
+  )
+}
+
 const App = () => {
   const [items, setItems] = useState([])
+  const [orderBy, setOrderBy] = useState('newest')
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -22,6 +101,9 @@ const App = () => {
     ])
   }
 
+  const handleClickClearBtn = () => setItems([])
+  const handleChangeOrder = (e) => setOrderBy(e.target.value)
+
   const handleClickDelete = (id) =>
     setItems((prev) => prev.filter((item) => item.id != id))
 
@@ -32,16 +114,6 @@ const App = () => {
       ),
     )
 
-  // const itemsLength = items.length - 1
-  // console.log(itemsLength)
-  let totalStored = items.reduce((acc, item) => {
-    if (item.stored) {
-      acc++
-    }
-    return acc
-  }, 0)
-  let percentItems = totalStored / items.length * 100
-  console.log(totalStored)
   return (
     <>
       <header
@@ -52,68 +124,29 @@ const App = () => {
       <main>
         <section className='bg-blue-900 flex items-center justify-center py-2'>
           <p className='text-white pr-2'>o que você precisa guardar?</p>
-          <form onSubmit={handleSubmit}>
-            <select name="quantity" className='input'>
-              {ids.map((id, index) => (
-                <option key={id} value={index + 1}>
-                  {index + 1}
-                </option>
-              ))}
-            </select>
-            <input
-              className='input'
-              type="text"
-              name="text"
-            />
-            <button className='bg-pink-500 text-white p-1 px-3 rounded'>
-              Adicionar
-            </button>
-          </form>
+          <FormAddItem onHandleSubmit={handleSubmit} />
         </section>
       </main>
       <div className='flex flex-col h-[694px] justify-around'>
-        <section className='flex-1 bg-orange-200'>
-          <ul className='flex gap-5 flex-wrap justify-around'>
-            {items.map((item) => (
-              <li
-                className='min-w-6 px-3'
-                key={item.id}
-              >
-                <input
-                  type="checkbox"
-                  checked={item.stored}
-                  onChange={() => handleClickCheck(item.id)}
-                  name="item"
-                  className='mx-2'
-                />
-                <span className={item.stored ? 'line-through' : ''}>
-                  {item.quantity} {item.name}
-                </span>
-                <button onClick={() => handleClickDelete(item.id)} >
-                  ❌
-                </button>
-              </li>
-            ))
-            }
-          </ul>
+        <section className='flex flex-1 bg-orange-200 justify-center'>
+          <ListOfItems
+            orderBy={orderBy}
+            items={items}
+            onClickCheck={handleClickCheck}
+            onClickDelete={handleClickDelete}
+          />
         </section>
         <footer className=' bg-blue-900 text-center m-0 py-4'>
-          <h3 className=' text-white pb-3'>
-            {items.length === 0 ?
-              <p>
-                Você tem 0 items na lista
-              </p>
-              : <p>
-                Você tem {items.length} itens na lista e ja guardou {totalStored} ({percentItems.toFixed(2)}%)
-              </p>
-            }
-          </h3>
-          <select name="order-select" id="" className='input'>
-            <option value="alfabeto">Alfabeto</option>
-            <option value="recente">Recentes</option>
-            <option value="guardado">Guardados</option>
-          </select>
-          <button className='text-white bg-orange-600 p-1 rounded '>Limpar lista</button>
+          <Filters
+            orderBy={orderBy}
+            onChangeOrder={handleChangeOrder}
+          />
+          <Stats items={items} />
+          <button
+            onClick={handleClickClearBtn}
+            className='text-white bg-orange-600 p-1 rounded '
+          >Limpar lista
+          </button>
         </footer>
       </div>
     </>
