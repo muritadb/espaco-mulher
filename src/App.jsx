@@ -23,6 +23,32 @@ const FormAddItem = ({ onHandleSubmit }) => (
     </button>
   </form>)
 
+const ListOfItems = ({ sortedItems, onClickCheck, onClickDelete }) => (
+  <ul className='flex gap-5 flex-wrap justify-around w-[720px]'>
+    {sortedItems.map((item) => (
+      <li
+        className='min-w-6 px-3 justify-start '
+        key={item.id}
+      >
+        <input
+          type="checkbox"
+          checked={item.stored}
+          onChange={() => onClickCheck(item.id)}
+          name="item"
+          className='mx-2'
+        />
+        <span className={item.stored ? 'line-through' : ''}>
+          {item.quantity} {item.name}
+        </span>
+        <button onClick={() => onClickDelete(item.id)} >
+          ❌
+        </button>
+      </li>
+    ))
+    }
+  </ul>
+)
+
 const App = () => {
   const [items, setItems] = useState([])
   const [orderBy, setOrderBy] = useState('newest')
@@ -78,35 +104,19 @@ const App = () => {
       <main>
         <section className='bg-blue-900 flex items-center justify-center py-2'>
           <p className='text-white pr-2'>o que você precisa guardar?</p>
+
           <FormAddItem onHandleSubmit={handleSubmit} />
 
         </section>
       </main>
       <div className='flex flex-col h-[694px] justify-around'>
         <section className='flex flex-1 bg-orange-200 justify-center'>
-          <ul className='flex gap-5 flex-wrap justify-around w-[720px]'>
-            {sortedItems.map((item) => (
-              <li
-                className='min-w-6 px-3 justify-start '
-                key={item.id}
-              >
-                <input
-                  type="checkbox"
-                  checked={item.stored}
-                  onChange={() => handleClickCheck(item.id)}
-                  name="item"
-                  className='mx-2'
-                />
-                <span className={item.stored ? 'line-through' : ''}>
-                  {item.quantity} {item.name}
-                </span>
-                <button onClick={() => handleClickDelete(item.id)} >
-                  ❌
-                </button>
-              </li>
-            ))
-            }
-          </ul>
+          <ListOfItems
+            sortedItems={sortedItems}
+            onClickCheck={handleClickCheck}
+            onClickDelete={handleClickDelete}
+          />
+
         </section>
         <footer className=' bg-blue-900 text-center m-0 py-4'>
           <h3 className=' text-white pb-3'>
