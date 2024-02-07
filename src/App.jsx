@@ -57,6 +57,22 @@ const Filters = ({ orderBy, onChangeOrder }) => (
   </select>
 )
 
+const Stats = ({ items }) => {
+  let storedItems = items.reduce((acc, item) => item.stored ? acc + 1 : acc, 0)
+  let storedPercentage = items.length === 0 ? 0 : ((storedItems / items.length) * 100).toFixed(0)
+  const singularPlural = items.length === 1 ? "item" : "itens"
+
+  return (
+    <h3 className=' text-white pb-3'>
+      {<p>
+        {`Você tem ${items.length} ${singularPlural} na lista`}
+        {items.length > 0 && <span> e ja guardou {storedItems} ({storedPercentage}%)</span>}
+      </p>
+      }
+    </h3>
+  )
+}
+
 const App = () => {
   const [items, setItems] = useState([])
   const [orderBy, setOrderBy] = useState('newest')
@@ -95,17 +111,7 @@ const App = () => {
       ),
     )
 
-  // const itemsLength = items.length - 1
-  // console.log(itemsLength)
-  let totalStored = items.reduce((acc, item) => {
-    if (item.stored) {
-      acc++
-    }
-    return acc
-  }, 0)
 
-  let percentItems = totalStored / items.length * 100
-  console.log(totalStored)
   return (
     <>
       <header
@@ -128,20 +134,11 @@ const App = () => {
           />
         </section>
         <footer className=' bg-blue-900 text-center m-0 py-4'>
-          <h3 className=' text-white pb-3'>
-            {items.length === 0 ?
-              <p>
-                Você tem 0 items na lista
-              </p>
-              : <p>
-                Você tem {items.length} itens na lista e ja guardou {totalStored} ({percentItems.toFixed(0)}%)
-              </p>
-            }
-          </h3>
           <Filters
             orderBy={orderBy}
             onChangeOrder={handleChangeOrder}
           />
+          <Stats items={items} />
           <button className='text-white bg-orange-600 p-1 rounded '>Limpar lista</button>
         </footer>
       </div>
