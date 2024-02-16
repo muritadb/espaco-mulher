@@ -81,7 +81,7 @@ const Stats = ({ items }) => {
   )
 }
 
-const App = () => {
+const useItems = () => {
   const [items, setItems] = useState([])
   const [orderBy, setOrderBy] = useState('newest')
 
@@ -113,7 +113,27 @@ const App = () => {
         item.id === id ? { ...item, stored: !item.stored } : item,
       ),
     )
+  return {
+    items,
+    orderBy,
+    handleSubmit,
+    handleChangeOrder,
+    handleClickCheck,
+    handleClickDelete,
+    handleClickClearBtn
+  }
+}
 
+const App = () => {
+  const {
+    items,
+    orderBy,
+    handleSubmit,
+    handleChangeOrder,
+    handleClickCheck,
+    handleClickDelete,
+    handleClickClearBtn
+  } = useItems()
   return (
     <>
       <header
