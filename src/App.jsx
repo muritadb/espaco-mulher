@@ -3,25 +3,54 @@ import logo from './images/logo-espaco-mulher.png';
 
 const ids = Array.from({ length: 20 }, () => crypto.randomUUID())
 
-const FormAddItem = ({ onHandleSubmit }) => (
-  <form onSubmit={onHandleSubmit}>
-    <select name="quantity" className='input'>
-      {ids.map((id, index) => (
-        <option key={id} value={index + 1}>
-          {index + 1}
-        </option>
-      ))}
-    </select>
-    <input
-      placeholder='Adicione itens'
-      className='input'
-      type="text"
-      name="text"
-    />
-    <button className='bg-pink-500 text-white p-1 px-3 rounded'>
-      Adicionar
-    </button>
-  </form>)
+const FormAddItem = ({ onSubmitItem }) => {
+  const [inputValue, setInputValeu] = useState('')
+  const [selectValue, setSelectValue] = useState('1')
+
+  const handleChangeInput = (e) => setInputValeu(e.target.value)
+  const handleChangeSelect = (e) => setSelectValue(e.target.value)
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    onSubmitItem({
+      id: crypto.randomUUID(),
+      quantity: +selectValue,
+      name: inputValue,
+      stored: false
+    })
+
+    setInputValeu('')
+    setSelectValue('1')
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <select
+        value={selectValue}
+        onChange={handleChangeSelect}
+        className='input'
+      >
+        {ids.map((id, index) => (
+          <option key={id} value={index + 1}>
+            {index + 1}
+          </option>
+        ))}
+      </select>
+      <input
+        placeholder='Adicione itens'
+        className='input'
+        type="text"
+        value={inputValue}
+        onChange={handleChangeInput}
+        autoFocus
+      />
+      <button className='bg-pink-500 text-white p-1 px-3 rounded'>
+        Adicionar
+      </button>
+    </form>
+  )
+}
 
 const ListOfItems = ({ orderBy, items, onClickCheck, onClickDelete }) => {
   const sortedItems = orderBy === "stored"
@@ -85,22 +114,7 @@ const useItems = () => {
   const [items, setItems] = useState([])
   const [orderBy, setOrderBy] = useState('newest')
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    const { quantity, text } = e.target.elements
-
-    //setItems((e) => [...e, { q: quantity.value, t: text.value }])
-    setItems((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        quantity: +quantity.value,
-        name: text.value,
-        stored: false
-      }
-    ])
-  }
-
+  const handleSubmitForm = (newItem) => setItems((prev) => [...prev, newItem])
   const handleClickClearBtn = () => setItems([])
   const handleChangeOrder = (e) => setOrderBy(e.target.value)
 
@@ -116,7 +130,7 @@ const useItems = () => {
   return {
     items,
     orderBy,
-    handleSubmit,
+    handleSubmitForm,
     handleChangeOrder,
     handleClickCheck,
     handleClickDelete,
@@ -128,7 +142,7 @@ const App = () => {
   const {
     items,
     orderBy,
-    handleSubmit,
+    handleSubmitForm,
     handleChangeOrder,
     handleClickCheck,
     handleClickDelete,
@@ -144,7 +158,7 @@ const App = () => {
       <main>
         <section className='bg-blue-900 flex items-center justify-center py-2'>
           <p className='text-white pr-2'>o que você precisa guardar?</p>
-          <FormAddItem onHandleSubmit={handleSubmit} />
+          <FormAddItem onSubmitItem={handleSubmitForm} />
         </section>
       </main>
       <div className='flex flex-col h-[694px] justify-around'>
